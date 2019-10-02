@@ -18,7 +18,10 @@
 module ZMidi.Core.WriteFile 
   (
   -- * Write a Midi structure to file
-    writeMidi
+    writeMidi,
+    putMidiFile,
+    putHeader,
+    putTrack
   ) where
 
 import ZMidi.Core.Datatypes
@@ -45,16 +48,19 @@ writeMidi filename midi =
     L.hPut hdl (runPut $ putMidiFile midi)   >>
     hClose hdl                    
 
+-- | Serialize a MIDI file.
 putMidiFile :: MidiFile -> PutM ()
 putMidiFile (MidiFile hdr trks) = 
     putHeader hdr *> mapM_ putTrack trks
   
+-- | Serialize a MIDI header.
 putHeader :: MidiHeader -> PutM ()
 putHeader (MidiHeader fmt n td) =
     putString "MThd"  *>  putWord32be 6 *> 
     putFormat fmt     *>  putWord16be n *>  putTimeDivision td
 
 
+-- | Serialize a MIDI track.
 putTrack :: MidiTrack -> PutM ()
 putTrack (MidiTrack ms) = 
     putString "MTrk" *> (putWord32be $ fromIntegral $ L.length bs)
