@@ -30,7 +30,7 @@ module ZMidi.Core.Datatypes
   -- * A word14 type (for pitch bends)  
     Word14
   -- * MidiFile syntax.
-  , DeltaTime
+  , DeltaTime(..)
   , TagByte
 
   , MidiFile(..)
